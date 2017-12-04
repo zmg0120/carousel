@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.leftBtn{
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			background-color: rgba(0,0,0,0.5);
+			color: white;
+			font-size: 25px;
+			text-align: center;
+			line-height: 40px;
+			left: 0;
+			top: 50%;
+			margin-top: -20px;
+		}
+		.rightBtn{
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			background-color: rgba(0,0,0,0.5);
+			color: white;
+			font-size: 25px;
+			text-align: center;
+			line-height: 40px;
+			right: 0;
+			top: 50%;
+			margin-top: -20px;
+		}
+		.bottomBtn{
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			list-style: none;
+		}
+		.bottomBtn li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background: yellow;
+			margin-left: 10px;
+		}
+		.bottomBtn li.active{
+			background: skyblue;
+		}
+	</style>
+</head>
+<body>
+	<div id="div1"></div>
+</body>
+<script src="js/move.js"></script>
+<script>
+	function Carousel(json){
+		//罗列属性
+		this.dom = document.getElementById(json.id);
+		this.aImg = json.aImg;
+		this.width = json.width;
+		this.height = json.height;
+		this.palyDraution = json.palyDraution;
+		this.oLeftBtn = null;
+		this.oRightBtn = null;
+		this.oBottomBtn = null;
+		this.now = 0;
+
+		this.aImgUl = null;
+		
+
+		//初始化页面 主要是DOM节点的创建
+		this.init();
+
+		//事件绑定
+		this.bindEvent();
+
+		//自动播放
+		this.autoPlay();
+	}
+
+	Carousel.prototype.init = function(){
+		//div相对定位
+		this.dom.style.position = "relative";
+		this.dom.style.margin = 'auto';
+		this.dom.style.marginTop = '50px';
+		this.dom.style.width = this.width + "px";
+		this.dom.style.height = this.height + "px";
+
+
+		//存放图片的ul
+		this.aImgUl = document.createElement('ul');
+		//存放图片的ul添加到div1中
+		this.dom.appendChild(this.aImgUl);
+
+
+		//用循环创建li 存放图片
+		for(var i = 0; i < this.aImg.length; i++){
+			var oLi = document.createElement('li');
+			//创建图片节点
+			var oImg = document.createElement('img');
+			oImg.src = this.aImg[i];
+			oImg.style.width = this.width +"px";
+			oImg.style.height = this.height + "px";
+
+			//对li绝对定位
+			oLi.style.position = "absolute";
+			oLi.style.top = 0;
+			oLi.style.left = 0;
+			oLi.style.zIndex = 0;
+			oLi.style.opacity = 0.5;
+			if(i == 0){
+				oLi.style.zIndex = 50;
+				oLi.style.opacity = 1;
+			}
+
+			//向li添加图片
+			oLi.appendChild(oImg);
+			//向存放图片的UL添加li
+			this.aImgUl.appendChild(oLi);
+		}
+		
+
+		//左右按钮
+		this.oLeftBtn = document.createElement('span');
+		this.oLeftBtn.className = 'leftBtn';
+		this.oLeftBtn.innerHTML = "&lt;";
+		this.oLeftBtn.style.zIndex = 100;
+		this.dom.appendChild(this.oLeftBtn);
+
+		this.oRightBtn = document.createElement('span');
+		this.oRightBtn.className = 'rightBtn';
+		this.oRightBtn.innerHTML = "&gt;";
+		this.oRightBtn.style.zIndex = 100;
+		this.dom.appendChild(this.oRightBtn);
+
+		//底部按钮
+		this.oBottomBtn = document.createElement('ul'); //创建底部按钮ul
+		this.dom.appendChild(this.oBottomBtn); //添加到div1容器
+		this.oBottomBtn.className = 'bottomBtn';
+		this.oBottomBtn.style.zIndex = 100;
+
+		for(var i = 0; i < this.aImg.length; i++){
+			var oLi = document.createElement('li');
+			if(i == 0){
+				oLi.className = "active";
+			}
+			this.oBottomBtn.appendChild(oLi);
+		}
+
+		this.oBottomBtn.style.marginLeft = -this.oBottomBtn.offsetWidth/2 + "px";
+
+		Carousel.prototype.bindEvent = function(){
+			var _self = this;
+			this.oRightBtn.onclick = function(){
+				_self.next();
+			}
+			this.oLeftBtn.onclick = function(){
+				_self.pre();
+			}
+			for(var i = 0; i < this.oBottomBtn.children.length; i++){
+				this.oBottomBtn.children[i].index = i;
+				this.oBottomBtn.children[i].onclick = function(){
+					_self.now = this.index;
+					_self.tab();
+				}
+			}
+		}
+		Carousel.prototype.next = function(){
+			this.now++;
+			if(this.now == this.aImg.length){
+				this.now = 0;
+			}
+			this.tab();
+		}
+		Carousel.prototype.pre = function(){
+			this.now--;
+			if(this.now < 0){
+				this.now = this.aImg.length - 1;
+			}
+			this.tab();
+		}
+		Carousel.prototype.tab = function(){
+			for(var i = 0; i < this.aImg.length; i++){
+				this.oBottomBtn.children[i].className = "";
+				this.aImgUl.children[i].style.zIndex = 0;
+				this.aImgUl.children[i].style.opacity = 0.5;
+			}
+			this.oBottomBtn.children[this.now].className = 'active';
+			this.aImgUl.children[this.now].style.zIndex = 50;
+			// this.aImgUl.children[this.now].style.opacity = 1;
+			starMove(this.aImgUl.children[this.now],{opacity:100});
+		}
+
+		Carousel.prototype.autoPlay = function(){
+			var _self = this;
+			var timer = setInterval(function(){
+				_self.next();
+			},this.palyDraution);
+			this.dom.onmouseover = function(){
+				clearInterval(timer);
+			}
+			this.dom.onmouseout = function(){
+				timer = setInterval(function(){
+					_self.next();
+				},_self.palyDraution);
+			}
+		}	
+	}
+	new Carousel({
+		id:'div1',
+		aImg:[
+			'image/04.png',
+			'image/03.png',
+			'image/02.png',		
+			'image/01.png'
+		],
+		width: 650,
+		height: 275,
+		palyDraution: 1000
+	}); //创建对象
+</script>
+</html>

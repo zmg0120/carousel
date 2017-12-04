@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            div{
+                width: 350px;
+                height: 218px;
+                border: 10px solid rgb(70,70,70);
+                margin: 50px auto;
+                overflow: hidden;
+            }
+            ul{
+                width: 1750px;
+                height: 218px;
+                background-color: black;
+                animation-name: lb;
+                animation-duration: 5s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+            li{
+                float: left;
+                list-style: none;
+            }
+            ul:hover{
+                animation-play-state: paused;
+            }
+            ul:hover li{
+                opacity: 0.5;
+            }
+            ul li:hover{
+                opacity: 1;
+            }
+
+            @keyframes lb{
+                from{
+                    margin-left: 0px;
+                }
+                to{
+                    margin-left: -1400px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <ul>
+                <li><img src="image/06.jpg" height="218" width="350" alt="" /></li>
+                <li><img src="image/07.jpg" height="218" width="350" alt="" /></li>
+                <li><img src="image/08.jpg" height="218" width="350" alt="" /></li>
+                <li><img src="image/09.jpg" height="218" width="350" alt="" /></li>
+                <li><img src="image/06.jpg" height="218" width="350" alt="" /></li>
+                <!-- <li><img src="10.jpg" height="218" width="350" alt="" />5</li> -->
+                <!-- <li><img src="06.jpg" height="218" width="350" alt="" />1</li> -->
+            </ul>
+        </div>
+    </body>
+</html>

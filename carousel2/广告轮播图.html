@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.ad{
+			width: 600px;
+			height: 255px;
+			margin: 50px auto;
+			position: relative;
+		}
+		ul#imgs{
+			width: 600px;
+			height: 255px;
+			list-style: none;
+		}
+		ul#imgs li{
+			width: 600px;
+			height: 255px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		ul#imgs li img{
+			width: 600px;
+		}
+		.ad span{
+			display: block;
+			background-color: rgba(0,0,0,0.5);
+			width: 50px;
+			height: 50px;
+			line-height: 50px;
+			font-size: 30px;
+			color: white;
+			text-align: center;
+			cursor: pointer;
+			z-index: 20;
+		}
+		.ad .left{
+			position: absolute;
+			top: 110px;
+			left: 0px;
+		}
+		.ad .right{
+			position: absolute;
+			top: 110px;
+			right: 0px;
+		}
+		.desc{
+			list-style: none;
+			width: 160px;
+			height: 40px;
+			text-align: center;
+			line-height: 40px;
+			background-color: rgba(0,0,0,0.5);
+			color: white;
+			position: absolute;
+			left: 50%;
+			margin-left: -80px;
+			bottom: 20px;
+			z-index: 20;
+			
+		}
+		.desc li{
+			width: 40px;
+			height: 40px;
+			float: left;
+			box-sizing: border-box;
+			border: 2px solid black;
+			cursor: pointer;
+			border-right: none;
+
+
+		}
+		.desc li:nth-child(4){
+			border-right:2px solid #000;
+			/*background-color: red;*/
+		}
+		.active{
+			background-color: rgb(100,100,100);
+		}
+	</style>
+	<script src="js/move.js"></script>
+	<script>
+		window.onload = function(){
+			var aBtn = document.getElementById('btn').children; 
+			var aImg = document.getElementById('imgs').children;
+			var oPre = document.getElementById('pre');
+			var oNext = document.getElementById('next');
+			var oAdbox = document.getElementById('adbox');
+			// console.log(oBtn);
+			var now = 0; 
+			for(var i = 0; i < aBtn.length; i++){
+				aBtn[i].index = i;
+				aBtn[i].onclick = function(){
+					now = this.index;
+					tab();
+				}
+			}
+
+			function tab(){
+				for(var i = 0; i < aBtn.length; i++){
+						aBtn[i].className = "";
+						aImg[i].style.zIndex = 1;
+						aImg[i].style.opacity = 0.3;
+					}
+					aBtn[now].className = "active";
+					aImg[now].style.zIndex = 10;
+					// aImg[this.index].style.opacity = 1;
+					starMove(aImg[now],{opacity:100});
+			}
+			oNext.onclick = function(){
+				now++;
+				if(now == aBtn.length){
+					now = 0;
+				}
+				tab();
+			}
+			oPre.onclick = function(){
+				now--;
+				if(now < 0){
+					now = aBtn.length - 1;
+				}
+				tab();				
+			}
+			var timer = null;
+			timer = setInterval(function(){
+				oNext.onclick();
+			},1000);
+
+			oAdbox.onmouseover = function(){
+				clearInterval(timer);
+			}
+			oAdbox.onmouseout = function(){
+				timer = setInterval(function(){
+				oNext.onclick();
+				},1000);
+			}
+
+		}
+	</script>
+</head>
+<body>
+	<div class="ad" id="adbox">
+		<ul id="imgs">
+			<li style="z-index: 10"><img src="image/01.png" alt=""></li>
+			<li><img src="image/02.png" alt=""></li>
+			<li><img src="image/03.png" alt=""></li>
+			<li><img src="image/04.png" alt=""></li>
+		</ul>	
+		<span class="left" id="pre">&lt;</span>
+		<span class="right" id="next">&gt;</span>
+		<ul class="desc" id="btn" >
+			<li class="active">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ul>
+	</div>
+</body>
+</html>
